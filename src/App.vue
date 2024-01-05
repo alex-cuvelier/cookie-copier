@@ -5,11 +5,13 @@
             <Dropdown v-model="sourceDomain" inputId="sourceDomain" :options="openedTabsDomains" placeholder="Source" />
         </div>
 
-        <div class="flex flex-col mt-2 max-h-64 overflow-y-auto">
+        <div v-if="sourceDomain" class="flex flex-col mt-2 max-h-64 overflow-y-auto">
+            <label class="mb-1">Cookies</label>
             <div v-for="(cookie, index) in sourceDomainCookies" class="flex items-center mt-1">
                 <Checkbox v-model="selectedCookies" :inputId="`cookie_${index}`" :value="cookie.name" />
                 <label :for="`cookie_${index}`" class="ml-2"> {{ cookie.name }} </label>
             </div>
+            <div v-if="!sourceDomainCookies.length" class="text-gray-500">No cookies found for domain {{ sourceDomain }}</div>
         </div>
 
         <div class="flex flex-col mt-2">
@@ -92,6 +94,7 @@ watch(sourceDomain, (sourceDomain) => {
     chrome.cookies.getAll({ domain: sourceDomain }, function (cookies) {
         sourceDomainCookies.value = cookies;
     });
+    selectedCookies.value = [];
 });
 
 //When form changes, reset copy status
