@@ -34,14 +34,10 @@
         </DataTable>
 
         <div class="mt-2">
-            <span v-if="copyDone" class="text-green-500">Copied</span>
-            <span v-if="copyError" class="text-red-500">Error</span>
-        </div>
-
-        <div class="mt-2">
             <Button :disabled="!canCopy" @click="copyCookies">Copy cookies</Button>
         </div>
     </div>
+    <Toast />
 </template>
 
 <script setup>
@@ -50,6 +46,10 @@ import Dropdown from 'primevue/dropdown';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
+import Toast from 'primevue/toast';
+import { useToast } from 'primevue/usetoast';
+
+const toast = useToast();
 
 const sourceDomain = ref('');
 const targetDomain = ref('');
@@ -70,8 +70,6 @@ const canCopy = computed(() => {
     return sourceDomain.value && targetDomain.value && selectedCookies.value.length;
 });
 
-const copyDone = ref(false);
-const copyError = ref(false);
 const copyCookies = async () => {
 
     //filter cookies to copy
@@ -85,7 +83,6 @@ const copyCookies = async () => {
             value: cookie.value,
             domain: targetDomain.value,
             path: cookie.path,
-            //timetamp in one year
             expirationDate: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 365,
         }));
     });
@@ -93,11 +90,12 @@ const copyCookies = async () => {
     //when all promises are done, set copyDone or copyError
     Promise.all(promises)
         .then(() => {
-            copyDone.value = true;
+            toast.add({severity:'success', detail:'Cookie(s) copied', life: 3000});
         })
         .catch((err) => {
             console.error(err);
             copyError.value = true;
+            toast.add({severity:'error', detail:'Error copying cookie(s)', life: 3000});
         });
 };
 
@@ -109,12 +107,6 @@ watch(sourceDomain, async (sourceDomain) => {
     selectedCookies.value = [];
 });
 
-//When form changes, reset copy status
-watch([sourceDomain, targetDomain, selectedCookies], () => {
-    copyDone.value = false;
-    copyError.value = false;
-    console.log(selectedCookies.value)
-});
 </script>
 
 <style lang="scss">
