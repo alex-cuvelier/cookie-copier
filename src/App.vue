@@ -2,8 +2,6 @@
     <div class="m-2">
 
         <div class="flex gap-2">
-
-
             <div class="flex-1 flex flex-col">
                 <label for="sourceDomain" class="mb-1">Source</label>
                 <Dropdown v-model="sourceDomain" inputId="sourceDomain" :options="openedTabsDomains" placeholder="Source" />
@@ -13,10 +11,10 @@
                 <label for="targetDomain" class="mb-1">Target</label>
                 <Dropdown v-model="targetDomain" inputId="targetDomain" :options="openedTabsDomains" placeholder="Target" />
             </div>
-
         </div>
 
-        <DataTable :value="sourceDomainCookies" :size="'small'" class="cookies-table my-5" v-model:selection="selectedCookies" selectionMode="multiple" :metaKeySelection="metaKey">
+        <div class="w-full p-2">
+        <DataTable :value="sourceDomainCookies" :size="'small'" class="cookies-table mb-5" v-model:selection="selectedCookies" selectionMode="multiple" :metaKeySelection="metaKey">
             <Column></Column>
             <Column field="name" header="Name" sortable></Column>
             <Column field="value" header="Value" sortable></Column>
@@ -24,17 +22,19 @@
             <Column field="expirationDate" header="Expiration Date" sortable></Column>
             <Column field="partitionKey.topLevelSite" header="Partition" sortable></Column>
             <template #empty>
-                <template v-if="sourceDomain.value">
+                <div v-if="sourceDomain.value" class="text-center">
                     No cookies for {{ sourceDomain.value }}
-                </template>
-                <template v-else>
+                </div>
+                <div v-else class="text-center">
                     Select a source domain
-                </template>
+                </div>
             </template>
         </DataTable>
-
+        </div>
         <div class="mt-2">
-            <Button :disabled="!canCopy" @click="copyCookies">Copy cookies</Button>
+            <Button :disabled="!canCopy" @click="copyCookies">
+                Copy {{selectedCookies.length}} cookies
+            </Button>
         </div>
     </div>
     <Toast />
@@ -90,7 +90,7 @@ const copyCookies = async () => {
     //when all promises are done, set copyDone or copyError
     Promise.all(promises)
         .then(() => {
-            toast.add({severity:'success', detail:'Cookie(s) copied', life: 3000});
+            toast.add({severity:'success', detail:`${selectedCookies.value.length} Cookie(s) copied`, life: 3000});
         })
         .catch((err) => {
             console.error(err);
