@@ -1,26 +1,37 @@
 <template>
     <div class="m-2">
-        <div class="flex flex-col">
-            <label for="sourceDomain" class="mb-1">Source</label>
-            <Dropdown v-model="sourceDomain" inputId="sourceDomain" :options="openedTabsDomains" placeholder="Source" />
-        </div>
 
-        <div v-if="sourceDomain" class="flex flex-col mt-2 max-h-64 overflow-y-auto">
-            <label class="mb-1">Cookies</label>
-            <div v-for="(cookie, index) in sourceDomainCookies" :key="index" class="flex items-center mt-1">
-                <Checkbox v-model="selectedCookies" :inputId="`cookie_${index}`" :value="cookie" />
-                <label :for="`cookie_${index}`" class="ml-2"> 
-                    {{ cookie.name }} 
-                    <span v-if="cookie.partitionKey">*</span>
-                </label>
+        <div class="flex gap-2">
+
+
+            <div class="flex-1 flex flex-col">
+                <label for="sourceDomain" class="mb-1">Source</label>
+                <Dropdown v-model="sourceDomain" inputId="sourceDomain" :options="openedTabsDomains" placeholder="Source" />
             </div>
-            <div v-if="!sourceDomainCookies.length" class="text-gray-500">No cookies found for domain {{ sourceDomain }}</div>
+
+            <div class="flex-1 flex flex-col">
+                <label for="targetDomain" class="mb-1">Target</label>
+                <Dropdown v-model="targetDomain" inputId="targetDomain" :options="openedTabsDomains" placeholder="Target" />
+            </div>
+
         </div>
 
-        <div class="flex flex-col mt-2">
-            <label for="targetDomain" class="mb-1">Target</label>
-            <Dropdown v-model="targetDomain" inputId="targetDomain" :options="openedTabsDomains" placeholder="Target" />
-        </div>
+        <DataTable :value="sourceDomainCookies" :size="'small'" class="cookies-table my-5" v-model:selection="selectedCookies" selectionMode="multiple" :metaKeySelection="metaKey">
+            <Column></Column>
+            <Column field="name" header="Name" sortable></Column>
+            <Column field="value" header="Value" sortable></Column>
+            <Column field="domain" header="Domain" sortable></Column>
+            <Column field="expirationDate" header="Expiration Date" sortable></Column>
+            <Column field="partitionKey.topLevelSite" header="Partition" sortable></Column>
+            <template #empty>
+                <template v-if="sourceDomain.value">
+                    No cookies for {{ sourceDomain.value }}
+                </template>
+                <template v-else>
+                    Select a source domain
+                </template>
+            </template>
+        </DataTable>
 
         <div class="mt-2">
             <span v-if="copyDone" class="text-green-500">Copied</span>
@@ -36,7 +47,8 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
 import Dropdown from 'primevue/dropdown';
-import Checkbox from 'primevue/checkbox';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
 import Button from 'primevue/button';
 
 const sourceDomain = ref('');
@@ -73,7 +85,8 @@ const copyCookies = async () => {
             value: cookie.value,
             domain: targetDomain.value,
             path: cookie.path,
-            expirationDate: cookie.expirationDate
+            //timetamp in one year
+            expirationDate: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 365,
         }));
     });
 
@@ -91,7 +104,7 @@ const copyCookies = async () => {
 //When source domain changes, get cookies for that domain
 watch(sourceDomain, async (sourceDomain) => {
     const cookies = await chrome.cookies.getAll({ domain: sourceDomain, partitionKey: {} });
-    console.log('cookies', cookies )
+    console.log('cookies', cookies)
     sourceDomainCookies.value = cookies;
     selectedCookies.value = [];
 });
@@ -100,7 +113,17 @@ watch(sourceDomain, async (sourceDomain) => {
 watch([sourceDomain, targetDomain, selectedCookies], () => {
     copyDone.value = false;
     copyError.value = false;
+    console.log(selectedCookies.value)
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+    .cookies-table{
+        td{
+            font-size: 0.875rem;
+            //text on one line
+            white-space: nowrap;
+            overflow: hidden;
+        }
+    }
+</style>

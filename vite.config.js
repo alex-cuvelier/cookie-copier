@@ -12,5 +12,19 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  build: {
+    rollupOptions: {
+      input: {
+        main: fileURLToPath(new URL('./index.html', import.meta.url)),
+        background: fileURLToPath(new URL('./src/background.js', import.meta.url))
+      },
+      output: {
+          entryFileNames: `[name].js`,
+          chunkFileNames: `[name].js`,
+          assetFileNames: `[name][extname]`,
+          dir: 'dist'
+      }
+    }
   }
 })
