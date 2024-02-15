@@ -1,13 +1,7 @@
 <template>
     <div>
-        <DataTable
-            :value="history"
-            v-model:expandedRows="expandedRows"
-            :size="'small'"
-            class="cookies-table mb-5"
-            sortField="date"
-            sortOrder="-1"
-        >
+        <DataTable :value="history" v-model:expandedRows="expandedRows" :size="'small'" class="cookies-table mb-5"
+            sortField="date" sortOrder="-1">
             <Column expander style="width: 5rem" />
             <Column field="source" header="Source" sortable></Column>
             <Column field="target" header="Target" sortable></Column>
@@ -17,9 +11,10 @@
                     {{ slotProps.data.cookies.length }}
                 </template>
             </Column>
-            <Column header ="Actions">
+            <Column header="Actions">
                 <template #body="slotProps">
-                    <Button rounded outlined icon="pi pi-replay" size="sm" @click="copyHistory(slotProps.data)" class="size-8"></Button>
+                    <Button rounded outlined icon="pi pi-replay" size="sm" @click="copyHistory(slotProps.data)"
+                        class="size-8" v-tooltip.left="'Rerun this copy'"></Button>
                 </template>
             </Column>
             <template #expansion="slotProps">

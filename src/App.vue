@@ -1,6 +1,6 @@
 <template>
     <div class="m-2">
-        <TabView :activeIndex="1">
+        <TabView :activeIndex="0">
             <TabPanel header="Copy by domains">
                 <CopyByDomain />
             </TabPanel>

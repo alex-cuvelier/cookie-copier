@@ -2,31 +2,25 @@
     <div class="flex gap-2">
         <div class="flex-1 flex flex-col">
             <label for="sourceDomain" class="mb-1">Source</label>
-            <Dropdown v-model="sourceDomain" inputId="sourceDomain" :options="openedTabsDomains" placeholder="Source" />
+            <DomainSelector v-model="sourceDomain" inputId="sourceDomain" :placeholder="Source"/>
         </div>
 
         <div class="flex-1 flex flex-col">
             <label for="targetDomain" class="mb-1">Target</label>
-            <Dropdown v-model="targetDomain" inputId="targetDomain" :options="openedTabsDomains" placeholder="Target" />
+            <DomainSelector v-model="targetDomain" inputId="targetDomain" :placeholder="Target"/>
         </div>
     </div>
 
     <div class="w-full p-2">
-        <DataTable
-            :value="sourceDomainCookies"
-            :size="'small'"
-            class="cookies-table mb-5"
-            v-model:selection="selectedCookies"
-            selectionMode="multiple"
-            :metaKeySelection="metaKey"
-        >
+        <DataTable :value="sourceDomainCookies" :size="'small'" class="cookies-table mb-5"
+            v-model:selection="selectedCookies" selectionMode="multiple" :metaKeySelection="metaKey">
             <Column field="name" header="Name" sortable></Column>
             <Column field="value" header="Value" sortable></Column>
             <Column field="domain" header="Domain" sortable></Column>
             <Column field="expirationDate" header="Expiration Date" sortable></Column>
             <Column field="partitionKey.topLevelSite" header="Partition" sortable></Column>
             <template #empty>
-                <div v-if="sourceDomain.value" class="text-center">No cookies for {{ sourceDomain.value }}</div>
+                <div v-if="sourceDomain" class="text-center">No cookies for {{ sourceDomain }}</div>
                 <div v-else class="text-center">Select a source domain</div>
             </template>
         </DataTable>
@@ -37,27 +31,19 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
-import Dropdown from 'primevue/dropdown';
+import { ref, computed, watch } from 'vue';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
 import { useToast } from 'primevue/usetoast';
 import { useHistoryStore } from '@/stores/history';
+import DomainSelector from '@/components/DomainSelector.vue';
 
 const toast = useToast();
 const { pushHistory } = useHistoryStore();
 
 const sourceDomain = ref('');
 const targetDomain = ref('');
-const openedTabsDomains = ref([]);
-
-//get opened tabs domains on mount and save them in openedTabsDomains
-const getOpenedTabs = async () => {
-    const tabs = await chrome.tabs.query({});
-    openedTabsDomains.value = [...new Set(tabs.map((tab) => new URL(tab.url).hostname))];
-};
-onMounted(getOpenedTabs);
 
 const selectedCookies = ref([]);
 const sourceDomainCookies = ref([]);
@@ -84,7 +70,7 @@ const copyCookies = async () => {
     Promise.all(promises)
         .then(() => {
             toast.add({ severity: 'success', detail: `${selectedCookies.value.length} Cookie(s) copied`, life: 3000 });
-            
+
             pushHistory({
                 action: 'copy',
                 source: sourceDomain.value,
