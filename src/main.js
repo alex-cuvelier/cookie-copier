@@ -1,4 +1,5 @@
 import 'primevue/resources/themes/lara-light-green/theme.css'
+import 'primeicons/primeicons.css'
 import './assets/main.scss'
 
 import { createApp } from 'vue'
