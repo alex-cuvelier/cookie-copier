@@ -14,11 +14,9 @@
     <div class="w-full p-2">
         <DataTable :value="sourceDomainCookies" :size="'small'" class="cookies-table mb-5"
             v-model:selection="selectedCookies" selectionMode="multiple" :metaKeySelection="metaKey">
-            <Column field="name" header="Name" sortable></Column>
-            <Column field="value" header="Value" sortable></Column>
-            <Column field="domain" header="Domain" sortable></Column>
-            <Column field="expirationDate" header="Expiration Date" sortable></Column>
-            <Column field="partitionKey.topLevelSite" header="Partition" sortable></Column>
+            <Column field="name" header="Name"></Column>
+            <Column field="domain" header="Domain"></Column>
+            <Column field="value" header="Value"></Column>
             <template #empty>
                 <div v-if="sourceDomain" class="text-center">No cookies for {{ sourceDomain }}</div>
                 <div v-else class="text-center">Select a source domain</div>

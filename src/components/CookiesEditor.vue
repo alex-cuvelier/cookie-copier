@@ -1,10 +1,10 @@
 <template>
     <div>
-        <IconField iconPosition="left">
+        <IconField iconPosition="left" class="m-3">
             <InputIcon>
                 <i class="pi pi-search"></i>
             </InputIcon>
-            <InputText v-model="searchFilter" placeholder="Search domain" />
+            <InputText v-model="searchFilter" placeholder="Search domain" class="w-full" />
         </IconField>
         <Accordion v-model:activeIndex="activeIndex">
             <AccordionTab v-for="(cookie, index) in cookies" :key="index">
@@ -16,7 +16,7 @@
                         </div>
                     </div>
                 </template>
-                <CookieForm  v-if="activeIndex == index" :cookie="cookie" />
+                <CookieForm  v-if="activeIndex == index" :cookie="cookie" @cookieDeleted="searchCookies"/>
             </AccordionTab>
         </Accordion>
     </div>
@@ -30,6 +30,7 @@ import InputIcon from 'primevue/inputicon';
 import Accordion from 'primevue/accordion';
 import AccordionTab from 'primevue/accordiontab';
 import CookieForm from '@/components/CookieForm.vue';
+import { sorterByProperty } from '@/utils/utils';
 
 const searchFilter = ref('lemonde.fr');
 const cookies = ref([]);
@@ -44,7 +45,10 @@ watch(searchFilter, (newValue) => {
 });
 
 const searchCookies = async () => {
-    cookies.value = await chrome.cookies.getAll({ domain: searchFilter.value });
+    const res = await chrome.cookies.getAll({ domain: searchFilter.value });
+    console.log(res);
+    cookies.value = res.sort(sorterByProperty('name'));
+    activeIndex.value = null;
 };
 
 searchCookies();
