@@ -32,13 +32,11 @@ const getDomains = () => {
 const getOpenedTabsDomains = async () => {
     const tabs = await chrome.tabs.query({});
     domains.value = [...new Set(tabs.map((tab) => new URL(tab.url).hostname))];
-    console.log('openedTabsDomains', domains.value);
 };
 
 const getAllCookiesDomains = async () => {
     const cookies = await chrome.cookies.getAll({});
     domains.value = [...new Set(cookies.map((cookie) => cookie.domain))];
-    console.log('allDomains', domains.value);
 };
 
 watch(type, getDomains, { immediate: true });
