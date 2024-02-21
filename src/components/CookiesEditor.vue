@@ -40,10 +40,13 @@ onMounted(async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const tabUrl = urlParams.get('tabUrl');
     if (tabUrl) {
-        searchFilter.value = tabUrl;
+        //rebuild url to remove hash
+        const url = new URL(tabUrl);
+        searchFilter.value = url.hostname;
     } else {
         const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-        searchFilter.value = tabs[0].url;
+        const url = new URL(tabs[0].url);
+        searchFilter.value = url.hostname;
     }
 });
 
@@ -59,7 +62,8 @@ watch(searchFilter, (newValue) => {
 });
 
 const searchCookies = async () => {
-    const res = await chrome.cookies.getAll({ url: searchFilter.value });
+    console.log('searchCookies', searchFilter.value)
+    const res = await chrome.cookies.getAll({ domain: searchFilter.value, partitionKey : {} });
     console.log(res);
     cookies.value = res.sort(sorterByProperty('name'));
     activeIndex.value = null;

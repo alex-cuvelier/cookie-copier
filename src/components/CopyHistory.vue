@@ -1,7 +1,13 @@
 <template>
     <div>
-        <DataTable :value="history" v-model:expandedRows="expandedRows" :size="'small'" scrollable class="cookies-table mb-5"
-            sortField="date" sortOrder="-1">
+        <DataTable 
+            :value="history" 
+            v-model:expandedRows="expandedRows" 
+            :size="'small'" 
+            scrollable 
+            class="cookies-table mb-5"
+            sortField="date" 
+            sortOrder="-1">
             <Column expander style="width: 5rem" />
             <Column field="source" header="Source"></Column>
             <Column field="target" header="Target"></Column>

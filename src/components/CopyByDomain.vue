@@ -12,8 +12,16 @@
     </div>
 
     <div class="w-full p-2">
-        <DataTable :value="sourceDomainCookies" :size="'small'" class="cookies-table mb-5"
-            v-model:selection="selectedCookies" selectionMode="multiple" :metaKeySelection="metaKey">
+        <DataTable 
+            :value="sourceDomainCookies"
+            :size="'small'"
+            class="cookies-table mb-5"
+            v-model:selection="selectedCookies"
+            selectionMode="multiple"
+            resizableColumns 
+            columnResizeMode="expand" 
+            reorderableColumns 
+            :metaKeySelection="metaKey">
             <Column field="name" header="Name"></Column>
             <Column field="domain" header="Domain"></Column>
             <Column field="value" header="Value"></Column>
