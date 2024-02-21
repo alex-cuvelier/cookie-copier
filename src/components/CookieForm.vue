@@ -128,14 +128,14 @@ const submitForm = () => {
     try {
         chrome.cookies.set(toSave).then((cookie) => {
             console.log('cookie saved', cookie);
-            toast.add({ severity: 'success', summary: 'Success', detail: 'Cookie saved' });
+            toast.add({ severity: 'success', summary: 'Success', detail: 'Cookie saved', life: 3000});
         }).catch((err) => {
             console.error(err);
-            toast.add({ severity: 'error', summary: 'Error', detail: 'Cookie not saved' });
+            toast.add({ severity: 'error', summary: 'Error', detail: 'Cookie not saved', life: 3000 });
         });
     } catch (err) {
         console.error(err);
-        toast.add({ severity: 'error', summary: 'Error', detail: 'Cookie not saved' });
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Cookie not saved', life: 3000 });
     }
 };
 
@@ -150,12 +150,12 @@ const deleteCookie = () => {
         name: props.cookie.name
     }).then((cookie) => {
         console.log('cookie removed', cookie);
-        toast.add({ severity: 'success', summary: 'Success', detail: 'Cookie removed' });
+        toast.add({ severity: 'success', summary: 'Success', detail: 'Cookie removed', life: 3000 });
         emit('cookieDeleted') ;
 
     }).catch((err) => {
         console.error(err);
-        toast.add({ severity: 'error', summary: 'Error', detail: 'Cookie not removed' });
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Cookie not removed', life: 3000 });
     });
 };
 </script>

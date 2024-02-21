@@ -16,14 +16,14 @@
                         </div>
                     </div>
                 </template>
-                <CookieForm  v-if="activeIndex == index" :cookie="cookie" @cookieDeleted="searchCookies"/>
+                <CookieForm v-if="activeIndex == index" :cookie="cookie" @cookieDeleted="searchCookies" />
             </AccordionTab>
         </Accordion>
     </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import IconField from 'primevue/iconfield';
 import InputText from 'primevue/inputtext';
 import InputIcon from 'primevue/inputicon';
@@ -32,7 +32,21 @@ import AccordionTab from 'primevue/accordiontab';
 import CookieForm from '@/components/CookieForm.vue';
 import { sorterByProperty } from '@/utils/utils';
 
-const searchFilter = ref('lemonde.fr');
+
+const searchFilter = ref('');
+onMounted(async () => {
+
+    //is has url search param tabDomain use it, otherwise get tab url
+    const urlParams = new URLSearchParams(window.location.search);
+    const tabUrl = urlParams.get('tabUrl');
+    if (tabUrl) {
+        searchFilter.value = tabUrl;
+    } else {
+        const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+        searchFilter.value = tabs[0].url;
+    }
+});
+
 const cookies = ref([]);
 const activeIndex = ref(null);
 
@@ -45,7 +59,7 @@ watch(searchFilter, (newValue) => {
 });
 
 const searchCookies = async () => {
-    const res = await chrome.cookies.getAll({ domain: searchFilter.value });
+    const res = await chrome.cookies.getAll({ url: searchFilter.value });
     console.log(res);
     cookies.value = res.sort(sorterByProperty('name'));
     activeIndex.value = null;

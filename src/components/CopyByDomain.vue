@@ -17,6 +17,7 @@
             <Column field="name" header="Name"></Column>
             <Column field="domain" header="Domain"></Column>
             <Column field="value" header="Value"></Column>
+            <Column field="partitionKey.topLevelSite" header="Partition"></Column>
             <template #empty>
                 <div v-if="sourceDomain" class="text-center">No cookies for {{ sourceDomain }}</div>
                 <div v-else class="text-center">Select a source domain</div>
