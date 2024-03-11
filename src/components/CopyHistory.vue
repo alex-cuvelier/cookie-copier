@@ -48,11 +48,19 @@ const { history } = useHistoryStore();
 const expandedRows = ref([]);
 
 const copyHistory = (historyItem) => {
-    const promises = historyItem.cookies.map((cookie) => {
+
+
+    const promises = historyItem.cookies.map(async (cookie) => {
+
+        console.log('cookie', cookie);
+        const cookieQuery = { url: `http${cookie.secure?'s':''}://${cookie.domain}${cookie.path}`, name: cookie.name, partitionKey: cookie.partitionKey };
+        console.log('cookieQuery', cookieQuery)
+        const actualCookie = await chrome.cookies.get(cookieQuery);
+
         return chrome.cookies.set({
             url: `http://${historyItem.target}`,
             name: cookie.name,
-            value: cookie.value,
+            value: actualCookie.value,
             domain: historyItem.target,
             path: cookie.path,
             expirationDate: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 365
