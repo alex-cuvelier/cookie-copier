@@ -1,2 +1,2 @@
 # cookie-copier
-This extension copies cookies from one domain to another.
+A browser extension that copies cookies from one domain to another.
