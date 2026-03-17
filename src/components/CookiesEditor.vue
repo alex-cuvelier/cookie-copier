@@ -32,10 +32,8 @@ import AccordionTab from 'primevue/accordiontab';
 import CookieForm from '@/components/CookieForm.vue';
 import { sorterByProperty } from '@/utils/utils';
 
-
 const searchFilter = ref('');
 onMounted(async () => {
-
     //is has url search param tabDomain use it, otherwise get tab url
     const urlParams = new URLSearchParams(window.location.search);
     const tabUrl = urlParams.get('tabUrl');
@@ -62,15 +60,14 @@ watch(searchFilter, (newValue) => {
 });
 
 const searchCookies = async () => {
-    console.log('searchCookies', searchFilter.value)
-    const res = await chrome.cookies.getAll({ domain: searchFilter.value, partitionKey : {} });
+    console.log('searchCookies', searchFilter.value);
+    const res = await chrome.cookies.getAll({ domain: searchFilter.value, partitionKey: {} });
     console.log(res);
     cookies.value = res.sort(sorterByProperty('name'));
     activeIndex.value = null;
 };
 
 searchCookies();
-
 </script>
 
 <style lang="scss" scoped></style>

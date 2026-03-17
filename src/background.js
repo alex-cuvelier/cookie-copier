@@ -2,10 +2,12 @@
 //     chrome.tabs.create({ url: 'index.html' });
 // });
 
-chrome.contextMenus.create({
-    id: 'cookie-copier',
-    title: 'Cookie-copier',
-    contexts: ['all']
+chrome.runtime.onInstalled.addListener(() => {
+    chrome.contextMenus.create({
+        id: 'cookie-copier',
+        title: 'Cookie-copier',
+        contexts: ['all']
+    });
 });
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {

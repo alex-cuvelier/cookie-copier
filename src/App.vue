@@ -1,29 +1,36 @@
 <template>
     <div class="m-2">
-        <TabView :activeIndex="0">
-            <TabPanel header="Edit cookies">
-                <CookiesEditor />
-            </TabPanel>
-            <TabPanel header="Copy cookies">
-                <CopyByDomain />
-            </TabPanel>
-            <TabPanel header="History">
-                <CopyHistory />
-            </TabPanel>
-        </TabView>
+        <Tabs value="0">
+            <TabList>
+                <Tab value="0">Copy cookies test</Tab>
+                <Tab value="1">History</Tab>
+                <Tab value="2">Explore cookies</Tab>
+            </TabList>
+            <TabPanels>
+                <TabPanel value="0">
+                    <CopyByDomain />
+                </TabPanel>
+                <TabPanel value="1">
+                    <CopyHistory />
+                </TabPanel>
+                <TabPanel value="2">
+                    <CookiesEditor />
+                </TabPanel>
+            </TabPanels>
+        </Tabs>
     </div>
     <Toast />
 </template>
 
 <script setup>
 import Toast from 'primevue/toast';
-import TabView from 'primevue/tabview';
+import Tabs from 'primevue/tabs';
+import TabList from 'primevue/tablist';
+import Tab from 'primevue/tab';
+import TabPanels from 'primevue/tabpanels';
 import TabPanel from 'primevue/tabpanel';
 
 import CopyByDomain from '@/components/CopyByDomain.vue';
 import CopyHistory from '@/components/CopyHistory.vue';
 import CookiesEditor from '@/components/CookiesEditor.vue';
 </script>
-
-<style lang="scss">
-</style>

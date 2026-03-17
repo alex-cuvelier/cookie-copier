@@ -16,34 +16,34 @@
         <!-- session-->
         <div class="field">
             <label for="session">Session</label>
-            <Checkbox id="session" v-model="cookieForm.session" binary="true">Session</Checkbox>
+            <Checkbox id="session" v-model="cookieForm.session" binary>Session</Checkbox>
         </div>
 
         <div class="field">
             <label for="expirationDate">Expiration Date</label>
-            <Calendar id="calendar-24h" v-model="cookieForm.expirationDate" showTime hourFormat="24"
+            <DatePicker id="calendar-24h" v-model="cookieForm.expirationDate" showTime hourFormat="24"
                 :disabled="cookieForm.session" />
         </div>
 
 
         <div class="card flex flex-wrap my-4 gap-3">
             <div class="flex align-items-center">
-                <Checkbox id="httpOnly" v-model="cookieForm.httpOnly" binary="true">HTTP Only</Checkbox>
+                <Checkbox id="httpOnly" v-model="cookieForm.httpOnly" binary>HTTP Only</Checkbox>
                 <label for="httpOnly" class="ml-2">HTTP Only</label>
             </div>
             <div class="flex align-items-center">
-                <Checkbox id="secure" v-model="cookieForm.secure" binary="true">Secure</Checkbox>
+                <Checkbox id="secure" v-model="cookieForm.secure" binary>Secure</Checkbox>
                 <label for="secure" class="ml-2">Secure</label>
             </div>
             <div class="flex align-items-center">
-                <Checkbox id="hostOnly" v-model="cookieForm.hostOnly" binary="true">Host Only</Checkbox>
+                <Checkbox id="hostOnly" v-model="cookieForm.hostOnly" binary>Host Only</Checkbox>
                 <label for="hostOnly" class="ml-2">Host Only</label>
             </div>
         </div>
 
         <div class="field">
             <label for="sameSite">Same Site</label>
-            <Dropdown id="sameSite" v-model="cookieForm.sameSite" :options="sameSiteOptions" optionLabel="name"
+            <Select id="sameSite" v-model="cookieForm.sameSite" :options="sameSiteOptions" optionLabel="name"
                 optionValue="value" />
         </div>
 
@@ -56,9 +56,9 @@
 import { ref, watch, defineEmits } from 'vue';
 import InputText from 'primevue/inputtext';
 import Checkbox from 'primevue/checkbox';
-import Calendar from 'primevue/calendar';
+import DatePicker from 'primevue/datepicker';
 import Button from 'primevue/button';
-import Dropdown from 'primevue/dropdown';
+import Select from 'primevue/select';
 import Textarea from 'primevue/textarea';
 import { useToast } from 'primevue/usetoast';
 

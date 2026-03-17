@@ -1,4 +1,4 @@
-import 'primevue/resources/themes/aura-light-green/theme.css'
+import Aura from '@primevue/themes/aura';
 
 import 'primeicons/primeicons.css'
 import './assets/main.scss'
@@ -14,7 +14,11 @@ import App from './App.vue'
 
 const app = createApp(App)
 
-app.use(PrimeVue);
+app.use(PrimeVue, {
+    theme: {
+        preset: Aura
+    }
+});
 app.use(ToastService);
 app.directive('tooltip', Tooltip);
 
