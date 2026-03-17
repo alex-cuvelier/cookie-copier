@@ -15,7 +15,10 @@
       "Bash(ffmpeg -y -i public/images/icone_trimmed.png -vf \"scale=''max\\(iw,ih\\)'':''max\\(iw,ih\\)'':force_original_aspect_ratio=decrease,pad=''max\\(iw,ih\\)'':''max\\(iw,ih\\)'':\\(ow-iw\\)/2:\\(oh-ih\\)/2:0x00000000\" public/images/icone_square.png)",
       "Bash(npx --yes sharp-cli -i public/images/icone_square.png -o public/images/icon16.png resize 16 16)",
       "Bash(npx --yes sharp-cli -i public/images/icone_square.png -o public/images/icon48.png resize 48 48)",
-      "Bash(npx --yes sharp-cli -i public/images/icone_square.png -o public/images/icon128.png resize 128 128)"
+      "Bash(npx --yes sharp-cli -i public/images/icone_square.png -o public/images/icon128.png resize 128 128)",
+      "Bash(npx --yes sharp-cli -i screenshots/screenshot-1.png -o screenshots/screenshot-1.png resize 1280 800)",
+      "Bash(npx --yes sharp-cli -i screenshots/screenshot-2.png -o screenshots/screenshot-2.png resize 1280 800)",
+      "Bash(npx --yes sharp-cli -i \"screenshots/screenshot-3.png.png\" -o \"screenshots/screenshot-3.png.png\" resize 1280 800)"
     ]
   }
 }
