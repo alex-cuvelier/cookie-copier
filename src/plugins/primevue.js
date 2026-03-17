@@ -38,7 +38,7 @@ export default {
             theme: {
                 preset: Noir,
                 options: {
-                    darkModeSelector: false
+                    darkModeSelector: '@media (prefers-color-scheme: dark)'
                 }
             }
         });
