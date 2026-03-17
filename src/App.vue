@@ -4,16 +4,7 @@
             <!-- Header -->
             <header class="app-header">
                 <div class="app-header__brand">
-                    <div class="app-header__icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>
-                            <circle cx="8" cy="9" r="1.5" fill="currentColor"/>
-                            <circle cx="14" cy="7" r="1" fill="currentColor"/>
-                            <circle cx="16" cy="13" r="1.5" fill="currentColor"/>
-                            <circle cx="10" cy="15" r="1" fill="currentColor"/>
-                            <circle cx="13" cy="11" r="1.2" fill="currentColor"/>
-                        </svg>
-                    </div>
+                    <img class="app-header__icon" src="/images/icone.png" alt="Cookie Copier" width="40" height="40" />
                     <h1 class="app-header__title">Cookie Copier</h1>
                 </div>
                 <span class="cc-badge cc-badge--amber">Extension</span>
@@ -21,17 +12,17 @@
 
             <!-- Tab Navigation -->
             <nav class="app-tabs">
-            <button
-                v-for="(tab, index) in tabs"
-                :key="index"
-                class="app-tabs__btn"
-                :class="{ 'app-tabs__btn--active': activeTab === index }"
-                @click="activeTab = index"
-            >
-                <i :class="tab.icon" class="app-tabs__icon"></i>
-                <span>{{ tab.label }}</span>
-            </button>
-        </nav>
+                <button
+                    v-for="(tab, index) in tabs"
+                    :key="index"
+                    class="app-tabs__btn"
+                    :class="{ 'app-tabs__btn--active': activeTab === index }"
+                    @click="activeTab = index"
+                >
+                    <i :class="tab.icon" class="app-tabs__icon"></i>
+                    <span>{{ tab.label }}</span>
+                </button>
+            </nav>
         </div>
 
         <!-- Content -->

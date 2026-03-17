@@ -449,6 +449,79 @@ body::before {
         border-radius: var(--radius-md) !important;
         backdrop-filter: blur(16px) !important;
         font-family: var(--font-body) !important;
+        background: var(--surface-card) !important;
+        border: 1px solid var(--surface-border) !important;
+        box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.45),
+            0 0 0 1px rgba(255, 255, 255, 0.04) !important;
+        color: var(--text-primary) !important;
+
+        .p-toast-message-content {
+            padding: 0.75rem 1rem !important;
+            gap: 0.6rem !important;
+            align-items: center !important;
+        }
+
+        .p-toast-message-text {
+            margin: 0 !important;
+        }
+
+        .p-toast-summary {
+            display: none;
+        }
+
+        .p-toast-detail {
+            font-family: var(--font-mono) !important;
+            font-size: 0.78rem !important;
+            color: var(--text-secondary) !important;
+            margin-top: 0.15rem !important;
+        }
+
+        .p-toast-close-button {
+            color: var(--text-muted) !important;
+            transition: color var(--transition-fast) !important;
+
+            &:hover {
+                color: var(--text-primary) !important;
+                background: transparent !important;
+            }
+        }
+
+        /* Success */
+        &.p-toast-message-success {
+            border-left: 3px solid #4ade80 !important;
+
+            .p-toast-message-icon {
+                color: #4ade80 !important;
+            }
+        }
+
+        /* Error */
+        &.p-toast-message-error {
+            border-left: 3px solid #f87171 !important;
+
+            .p-toast-message-icon {
+                color: #f87171 !important;
+            }
+        }
+
+        /* Warn */
+        &.p-toast-message-warn {
+            border-left: 3px solid var(--accent-400) !important;
+
+            .p-toast-message-icon {
+                color: var(--accent-400) !important;
+            }
+        }
+
+        /* Info */
+        &.p-toast-message-info {
+            border-left: 3px solid #60a5fa !important;
+
+            .p-toast-message-icon {
+                color: #60a5fa !important;
+            }
+        }
     }
 }
 

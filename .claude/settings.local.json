@@ -1,7 +1,21 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(npx --yes sharp-cli --version)",
+      "Bash(npx --yes sharp-cli -i public/images/icone.png -o public/images/icon16.png resize 16 16)",
+      "Bash(npx --yes sharp-cli -i public/images/icone.png -o public/images/icon48.png resize 48 48)",
+      "Bash(npx --yes sharp-cli -i public/images/icone.png -o public/images/icon128.png resize 128 128)",
+      "Bash(npx --yes sharp-cli -i public/images/icone.png -o public/images/icone_trimmed.png trim 5)",
+      "Bash(npx --yes sharp-cli -i public/images/icone_trimmed.png -o public/images/icon128.png resize 128 128)",
+      "Bash(node -e \":*)",
+      "Bash(npx --yes sharp-cli -i public/images/icone.png -o public/images/icone_trimmed.png trim 1)",
+      "Bash(ffmpeg -y -i public/images/icone_trimmed.png -vf \"pad=iw+20:ih+20:10:10:0x00000000\" public/images/icone_padded.png)",
+      "Bash(npx --yes sharp-cli -i public/images/icone_padded.png -o public/images/icon128.png resize 128 128)",
+      "Bash(ffmpeg -y -i public/images/icone_trimmed.png -vf \"scale=''max\\(iw,ih\\)'':''max\\(iw,ih\\)'':force_original_aspect_ratio=decrease,pad=''max\\(iw,ih\\)'':''max\\(iw,ih\\)'':\\(ow-iw\\)/2:\\(oh-ih\\)/2:0x00000000\" public/images/icone_square.png)",
+      "Bash(npx --yes sharp-cli -i public/images/icone_square.png -o public/images/icon16.png resize 16 16)",
+      "Bash(npx --yes sharp-cli -i public/images/icone_square.png -o public/images/icon48.png resize 48 48)",
+      "Bash(npx --yes sharp-cli -i public/images/icone_square.png -o public/images/icon128.png resize 128 128)"
     ]
   }
 }

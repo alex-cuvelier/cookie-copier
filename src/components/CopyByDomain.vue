@@ -45,7 +45,9 @@
                 <template #empty>
                     <div class="copy-domain__empty">
                         <i class="pi pi-inbox"></i>
-                        <span v-if="sourceDomain">No cookies for <strong>{{ sourceDomain }}</strong></span>
+                        <span v-if="sourceDomain"
+                            >No cookies for <strong>{{ sourceDomain }}</strong></span
+                        >
                         <span v-else>Select a source domain to see cookies</span>
                     </div>
                 </template>
@@ -54,11 +56,11 @@
 
         <!-- Action -->
         <div class="copy-domain__action">
-            <Button
-                :disabled="!canCopy"
-                @click="copyCookies"
-                class="cc-btn-glow"
-            >
+            <span v-if="selectedCookies.length && !targetDomain" class="copy-domain__hint">
+                <i class="pi pi-info-circle"></i>
+                Select a target domain to copy
+            </span>
+            <Button :disabled="!canCopy" @click="copyCookies" class="cc-btn-glow">
                 <i class="pi pi-copy" style="margin-right: 0.4rem"></i>
                 Copy {{ selectedCookies.length }} cookie{{ selectedCookies.length !== 1 ? 's' : '' }}
             </Button>
@@ -102,7 +104,7 @@ const copyCookies = async () => {
 
     Promise.all(promises)
         .then(() => {
-            toast.add({ severity: 'success', detail: `${selectedCookies.value.length} Cookie(s) copied`, life: 3000 });
+            toast.add({ severity: 'success', detail: `${selectedCookies.value.length} Cookie(s) copied`, life: 300000 });
 
             pushHistory({
                 action: 'copy',
@@ -187,7 +189,32 @@ watch(sourceDomain, async (sourceDomain) => {
 
     &__action {
         display: flex;
+        align-items: center;
         justify-content: flex-end;
+        gap: 0.6rem;
+    }
+
+    &__hint {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.78rem;
+        color: var(--accent-400);
+        animation: hint-pulse 1.5s ease-in-out infinite;
+
+        i {
+            font-size: 0.85rem;
+        }
+    }
+
+    @keyframes hint-pulse {
+        0%,
+        100% {
+            opacity: 0.6;
+        }
+        50% {
+            opacity: 1;
+        }
     }
 }
 </style>
