@@ -1,5 +1,527 @@
 @import 'tailwindcss/utilities';
 
-body{
-    min-width: 600px;
+/* ─── Design Tokens ─── */
+:root {
+    /* Surface */
+    --surface-ground: #0f1117;
+    --surface-card: #181a22;
+    --surface-overlay: #1e2029;
+    --surface-border: rgba(255, 255, 255, 0.06);
+    --surface-hover: rgba(255, 255, 255, 0.04);
+
+    /* Accent — warm amber/gold */
+    --accent-50: #fffbeb;
+    --accent-100: #fef3c7;
+    --accent-200: #fde68a;
+    --accent-300: #fcd34d;
+    --accent-400: #fbbf24;
+    --accent-500: #f59e0b;
+    --accent-600: #d97706;
+    --accent-700: #b45309;
+
+    /* Text */
+    --text-primary: #f1f1f4;
+    --text-secondary: #9ca3af;
+    --text-muted: #5c6370;
+
+    /* Misc */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Fonts */
+    --font-display: 'Outfit', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-body: 'Outfit', sans-serif;
+}
+
+/* ─── Global Reset & Base ─── */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    min-width: 620px;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    color: var(--text-primary);
+    background: var(--surface-ground);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Noise texture overlay on body */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 256px 256px;
+}
+
+#app {
+    position: relative;
+    z-index: 1;
+}
+
+/* ─── Custom Scrollbar ─── */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+/* ─── Typography Helpers ─── */
+.font-display {
+    font-family: var(--font-display);
+}
+
+.font-mono {
+    font-family: var(--font-mono);
+}
+
+/* ─── Entrance Animations ─── */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp var(--transition-smooth) ease-out both;
+}
+
+.animate-fade-in {
+    animation: fadeIn var(--transition-smooth) ease-out both;
+}
+
+/* Stagger children animations */
+.stagger-children > * {
+    animation: fadeInUp 400ms ease-out both;
+}
+
+.stagger-children > *:nth-child(1) {
+    animation-delay: 0ms;
+}
+.stagger-children > *:nth-child(2) {
+    animation-delay: 60ms;
+}
+.stagger-children > *:nth-child(3) {
+    animation-delay: 120ms;
+}
+.stagger-children > *:nth-child(4) {
+    animation-delay: 180ms;
+}
+.stagger-children > *:nth-child(5) {
+    animation-delay: 240ms;
+}
+
+/* ─── Card Component ─── */
+.cc-card {
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    transition: border-color var(--transition-fast);
+
+    &:hover {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* ─── Glow Button ─── */
+.cc-btn-glow {
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        border-radius: inherit;
+        background: linear-gradient(135deg, var(--accent-400), var(--accent-600));
+        opacity: 0;
+        z-index: -1;
+        filter: blur(12px);
+        transition: opacity var(--transition-fast);
+    }
+
+    &:hover::after {
+        opacity: 0.4;
+    }
+}
+
+/* ─── Badge ─── */
+.cc-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    font-family: var(--font-mono);
+    border-radius: 999px;
+    letter-spacing: 0.02em;
+
+    &--amber {
+        background: rgba(251, 191, 36, 0.12);
+        color: var(--accent-300);
+        border: 1px solid rgba(251, 191, 36, 0.2);
+    }
+
+    &--slate {
+        background: rgba(148, 163, 184, 0.1);
+        color: var(--text-secondary);
+        border: 1px solid rgba(148, 163, 184, 0.15);
+    }
+
+    &--green {
+        background: rgba(34, 197, 94, 0.1);
+        color: #4ade80;
+        border: 1px solid rgba(34, 197, 94, 0.15);
+    }
+}
+
+/* ─── Section Label ─── */
+.cc-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+}
+
+/* ─── PrimeVue Overrides ─── */
+
+/* DataTable */
+.p-datatable {
+    .p-datatable-thead > tr > th {
+        background: var(--surface-overlay) !important;
+        border-color: var(--surface-border) !important;
+        color: var(--text-secondary) !important;
+        font-family: var(--font-mono) !important;
+        font-size: 0.7rem !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.06em !important;
+        padding: 0.6rem 0.75rem !important;
+    }
+
+    .p-datatable-tbody > tr {
+        background: transparent !important;
+        border-color: var(--surface-border) !important;
+        transition: background var(--transition-fast) !important;
+
+        &:hover {
+            background: var(--surface-hover) !important;
+        }
+
+        /* Selected row highlight */
+        &.p-datatable-row-selected {
+            background: rgba(245, 158, 11, 0.1) !important;
+
+            > td {
+                color: var(--accent-300) !important;
+            }
+
+            &:hover {
+                background: rgba(245, 158, 11, 0.15) !important;
+            }
+        }
+
+        > td {
+            border-color: var(--surface-border) !important;
+            font-size: 0.8rem !important;
+            padding: 0.5rem 0.75rem !important;
+            color: var(--text-primary) !important;
+            font-family: var(--font-mono) !important;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+        }
+    }
+
+    .p-datatable-header {
+        background: transparent !important;
+        border: none !important;
+    }
+}
+
+/* Accordion */
+.p-accordion {
+    .p-accordionheader {
+        background: var(--surface-card) !important;
+        border-color: var(--surface-border) !important;
+        color: var(--text-primary) !important;
+        font-family: var(--font-mono) !important;
+        font-size: 0.82rem !important;
+        transition: background var(--transition-fast) !important;
+
+        &:hover {
+            background: var(--surface-overlay) !important;
+        }
+    }
+
+    .p-accordioncontent-content {
+        background: var(--surface-ground) !important;
+        border-color: var(--surface-border) !important;
+    }
+}
+
+/* Inputs */
+.p-inputtext,
+.p-textarea {
+    background: var(--surface-overlay) !important;
+    border-color: var(--surface-border) !important;
+    color: var(--text-primary) !important;
+    font-family: var(--font-mono) !important;
+    font-size: 0.82rem !important;
+    border-radius: var(--radius-sm) !important;
+    transition:
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast) !important;
+
+    &:focus,
+    &:enabled:focus {
+        border-color: var(--accent-500) !important;
+        box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.15) !important;
+    }
+
+    &::placeholder {
+        color: var(--text-muted) !important;
+    }
+}
+
+/* Select */
+.p-select {
+    background: var(--surface-overlay) !important;
+    border-color: var(--surface-border) !important;
+    border-radius: var(--radius-sm) !important;
+
+    .p-select-label {
+        color: var(--text-primary) !important;
+        font-family: var(--font-mono) !important;
+        font-size: 0.82rem !important;
+    }
+
+    &:hover {
+        border-color: rgba(255, 255, 255, 0.12) !important;
+    }
+}
+
+.p-select-overlay {
+    background: var(--surface-card) !important;
+    border: 1px solid var(--surface-border) !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5) !important;
+
+    .p-select-option {
+        color: var(--text-primary) !important;
+        font-family: var(--font-mono) !important;
+        font-size: 0.8rem !important;
+
+        &:hover,
+        &.p-select-option-selected {
+            background: var(--surface-hover) !important;
+        }
+
+        &.p-select-option-selected {
+            color: var(--accent-400) !important;
+        }
+    }
+}
+
+/* Buttons — Primary */
+.p-button {
+    font-family: var(--font-display) !important;
+    font-weight: 600 !important;
+    border-radius: var(--radius-sm) !important;
+    transition: all var(--transition-fast) !important;
+
+    &:not(.p-button-outlined):not(.p-button-text):not(.p-button-danger) {
+        background: linear-gradient(135deg, var(--accent-500), var(--accent-600)) !important;
+        border-color: var(--accent-600) !important;
+        color: #0f1117 !important;
+
+        &:hover:not(:disabled) {
+            background: linear-gradient(135deg, var(--accent-400), var(--accent-500)) !important;
+            box-shadow: 0 4px 16px rgba(245, 158, 11, 0.25) !important;
+            transform: translateY(-1px);
+        }
+
+        &:disabled {
+            opacity: 0.35 !important;
+        }
+    }
+
+    &.p-button-outlined {
+        border-color: var(--surface-border) !important;
+        color: var(--text-secondary) !important;
+
+        &:hover {
+            background: var(--surface-hover) !important;
+            border-color: rgba(255, 255, 255, 0.12) !important;
+            color: var(--text-primary) !important;
+        }
+    }
+
+    &.p-button-danger {
+        background: rgba(239, 68, 68, 0.12) !important;
+        border-color: rgba(239, 68, 68, 0.25) !important;
+        color: #f87171 !important;
+
+        &:hover {
+            background: rgba(239, 68, 68, 0.2) !important;
+            box-shadow: 0 4px 16px rgba(239, 68, 68, 0.15) !important;
+        }
+    }
+}
+
+/* Checkbox */
+.p-checkbox .p-checkbox-box {
+    background: var(--surface-overlay) !important;
+    border-color: var(--surface-border) !important;
+    border-radius: 4px !important;
+
+    &.p-checked {
+        background: var(--accent-500) !important;
+        border-color: var(--accent-500) !important;
+    }
+}
+
+/* DatePicker */
+.p-datepicker-panel {
+    background: var(--surface-card) !important;
+    border: 1px solid var(--surface-border) !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Toast */
+.p-toast {
+    .p-toast-message {
+        border-radius: var(--radius-md) !important;
+        backdrop-filter: blur(16px) !important;
+        font-family: var(--font-body) !important;
+    }
+}
+
+/* Message */
+.p-message {
+    border-radius: var(--radius-sm) !important;
+    font-family: var(--font-body) !important;
+    font-size: 0.82rem !important;
+    background: var(--surface-card) !important;
+    border: 1px solid var(--surface-border) !important;
+    color: var(--text-secondary) !important;
+
+    .p-message-text {
+        color: var(--text-secondary) !important;
+    }
+
+    .p-message-icon {
+        color: var(--accent-400) !important;
+    }
+
+    /* Info variant */
+    &.p-message-info {
+        border-color: rgba(96, 165, 250, 0.15) !important;
+
+        .p-message-icon {
+            color: #60a5fa !important;
+        }
+    }
+
+    /* Warn variant */
+    &.p-message-warn {
+        border-color: rgba(251, 191, 36, 0.15) !important;
+
+        .p-message-icon {
+            color: var(--accent-400) !important;
+        }
+    }
+}
+
+/* SelectButton — flat selectors to win specificity over Aura theme */
+.p-selectbutton .p-togglebutton {
+    font-family: var(--font-display) !important;
+    font-size: 0.78rem !important;
+    font-weight: 500 !important;
+    background: var(--surface-overlay) !important;
+    border-color: var(--surface-border) !important;
+    color: var(--text-secondary) !important;
+}
+
+.p-selectbutton .p-togglebutton .p-togglebutton-content,
+.p-selectbutton .p-togglebutton .p-togglebutton-label {
+    color: var(--text-secondary) !important;
+}
+
+button.p-togglebutton.p-togglebutton-checked {
+    background: rgba(245, 158, 11, 0.15) !important;
+    border-color: var(--accent-500) !important;
+    color: var(--accent-300) !important;
+}
+
+button.p-togglebutton.p-togglebutton-checked .p-togglebutton-content,
+button.p-togglebutton.p-togglebutton-checked .p-togglebutton-label,
+button.p-togglebutton.p-togglebutton-checked span {
+    color: var(--accent-300) !important;
+}
+
+/* Tooltip */
+.p-tooltip .p-tooltip-text {
+    background: var(--surface-card) !important;
+    border: 1px solid var(--surface-border) !important;
+    color: var(--text-primary) !important;
+    font-family: var(--font-body) !important;
+    font-size: 0.78rem !important;
+    border-radius: var(--radius-sm) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
 }
