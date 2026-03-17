@@ -6,18 +6,18 @@
             </InputIcon>
             <InputText v-model="searchFilter" placeholder="Search domain" class="w-full" />
         </IconField>
-        <Accordion v-model:activeIndex="activeIndex">
-            <AccordionTab v-for="(cookie, index) in cookies" :key="index">
-                <template #header>
-                    <div class="flex justify-between">
-                        <div>
-                            <span class="font-semibold">{{ cookie.name }}</span>
-                            <span class="text-xs ml-2">{{ cookie.domain }}</span>
-                        </div>
-                    </div>
-                </template>
-                <CookieForm v-if="activeIndex == index" :cookie="cookie" @cookieDeleted="searchCookies" />
-            </AccordionTab>
+        <Message v-if="searchFilter.length <= 2" severity="info" class="mx-3">Type at least 3 characters to search cookies</Message>
+        <Message v-else-if="cookies.length === 0" severity="warn" class="mx-3">No cookies found</Message>
+        <Accordion v-model:value="activeIndex">
+            <AccordionPanel v-for="(cookie, index) in cookies" :key="index" :value="index">
+                <AccordionHeader>
+                    <span class="font-semibold">{{ cookie.name }}</span>
+                    <span class="text-xs ml-2">{{ cookie.domain }}</span>
+                </AccordionHeader>
+                <AccordionContent>
+                    <CookieForm :cookie="cookie" @cookieDeleted="searchCookies" />
+                </AccordionContent>
+            </AccordionPanel>
         </Accordion>
     </div>
 </template>
@@ -28,7 +28,10 @@ import IconField from 'primevue/iconfield';
 import InputText from 'primevue/inputtext';
 import InputIcon from 'primevue/inputicon';
 import Accordion from 'primevue/accordion';
-import AccordionTab from 'primevue/accordiontab';
+import AccordionPanel from 'primevue/accordionpanel';
+import AccordionHeader from 'primevue/accordionheader';
+import AccordionContent from 'primevue/accordioncontent';
+import Message from 'primevue/message';
 import CookieForm from '@/components/CookieForm.vue';
 import { sorterByProperty } from '@/utils/utils';
 
@@ -44,12 +47,24 @@ onMounted(async () => {
     } else {
         const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
         const url = new URL(tabs[0].url);
-        searchFilter.value = url.hostname;
+        if (!url.protocol.startsWith('chrome')) {
+            searchFilter.value = url.hostname;
+        }
     }
 });
 
 const cookies = ref([]);
 const activeIndex = ref(null);
+
+const searchCookies = async () => {
+    console.log('searchCookies', searchFilter.value);
+    const filter = searchFilter.value.toLowerCase();
+    const res = await chrome.cookies.getAll({});
+    cookies.value = res
+        .filter((c) => c.domain.toLowerCase().includes(filter) || c.name.toLowerCase().includes(filter))
+        .sort(sorterByProperty('name'));
+    activeIndex.value = null;
+};
 
 watch(searchFilter, (newValue) => {
     if (newValue.length > 2) {
@@ -58,16 +73,6 @@ watch(searchFilter, (newValue) => {
         cookies.value = [];
     }
 });
-
-const searchCookies = async () => {
-    console.log('searchCookies', searchFilter.value);
-    const res = await chrome.cookies.getAll({ domain: searchFilter.value, partitionKey: {} });
-    console.log(res);
-    cookies.value = res.sort(sorterByProperty('name'));
-    activeIndex.value = null;
-};
-
-searchCookies();
 </script>
 
 <style lang="scss" scoped></style>

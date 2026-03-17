@@ -1,27 +1,15 @@
-import Aura from '@primevue/themes/aura';
+import 'primeicons/primeicons.css';
+import './assets/main.scss';
 
-import 'primeicons/primeicons.css'
-import './assets/main.scss'
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
+import primevue from './plugins/primevue';
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import App from './App.vue';
 
-import PrimeVue from 'primevue/config';
-import ToastService from 'primevue/toastservice';
-import Tooltip from 'primevue/tooltip';
+const app = createApp(App);
 
-import App from './App.vue'
+app.use(primevue);
+app.use(createPinia());
 
-const app = createApp(App)
-
-app.use(PrimeVue, {
-    theme: {
-        preset: Aura
-    }
-});
-app.use(ToastService);
-app.directive('tooltip', Tooltip);
-
-app.use(createPinia())
-
-app.mount('#app')
+app.mount('#app');
