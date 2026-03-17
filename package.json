@@ -5,6 +5,7 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
+        "package": "vite build && powershell -Command \"Remove-Item -ErrorAction SilentlyContinue cookie-copier.zip; Compress-Archive -Path dist\\* -DestinationPath cookie-copier.zip\"",
         "dev": "vite build --watch",
         "preview": "vite preview",
         "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
