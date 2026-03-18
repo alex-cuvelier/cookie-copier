@@ -24,6 +24,19 @@
     --text-secondary: #9ca3af;
     --text-muted: #5c6370;
 
+    /* Theme-aware raw values */
+    --scrollbar-thumb: rgba(255, 255, 255, 0.1);
+    --scrollbar-thumb-hover: rgba(255, 255, 255, 0.18);
+    --card-hover-border: rgba(255, 255, 255, 0.1);
+    --input-hover-border: rgba(255, 255, 255, 0.12);
+    --shadow-overlay: rgba(0, 0, 0, 0.5);
+    --shadow-toast: rgba(0, 0, 0, 0.45);
+    --shadow-tooltip: rgba(0, 0, 0, 0.4);
+    --toast-inner-ring: rgba(255, 255, 255, 0.04);
+    --btn-primary-text: #0f1117;
+    --noise-opacity: 0.025;
+    --togglebutton-checked-bg: rgba(245, 158, 11, 0.15);
+
     /* Misc */
     --radius-sm: 6px;
     --radius-md: 10px;
@@ -35,6 +48,43 @@
     --font-display: 'Outfit', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
     --font-body: 'Outfit', sans-serif;
+}
+
+/* ─── Light Theme ─── */
+@media (prefers-color-scheme: light) {
+    :root {
+        /* Surface — warm ivory & cream */
+        --surface-ground: #f8f6f1;
+        --surface-card: #ffffff;
+        --surface-overlay: #f1ede6;
+        --surface-border: rgba(0, 0, 0, 0.08);
+        --surface-hover: rgba(0, 0, 0, 0.03);
+
+        /* Accent — slightly deeper for contrast on light */
+        --accent-300: #d97706;
+        --accent-400: #b45309;
+        --accent-500: #92400e;
+        --accent-600: #78350f;
+        --accent-700: #451a03;
+
+        /* Text */
+        --text-primary: #1c1917;
+        --text-secondary: #57534e;
+        --text-muted: #a8a29e;
+
+        /* Theme-aware raw values */
+        --scrollbar-thumb: rgba(0, 0, 0, 0.12);
+        --scrollbar-thumb-hover: rgba(0, 0, 0, 0.22);
+        --card-hover-border: rgba(0, 0, 0, 0.12);
+        --input-hover-border: rgba(0, 0, 0, 0.15);
+        --shadow-overlay: rgba(0, 0, 0, 0.12);
+        --shadow-toast: rgba(0, 0, 0, 0.1);
+        --shadow-tooltip: rgba(0, 0, 0, 0.08);
+        --toast-inner-ring: rgba(0, 0, 0, 0.04);
+        --btn-primary-text: #ffffff;
+        --noise-opacity: 0.015;
+        --togglebutton-checked-bg: rgba(180, 83, 9, 0.1);
+    }
 }
 
 /* ─── Global Reset & Base ─── */
@@ -63,7 +113,7 @@ body::before {
     inset: 0;
     z-index: 0;
     pointer-events: none;
-    opacity: 0.025;
+    opacity: var(--noise-opacity);
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
     background-repeat: repeat;
     background-size: 256px 256px;
@@ -85,12 +135,12 @@ body::before {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--scrollbar-thumb);
     border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.18);
+    background: var(--scrollbar-thumb-hover);
 }
 
 /* ─── Typography Helpers ─── */
@@ -170,7 +220,7 @@ body::before {
     transition: border-color var(--transition-fast);
 
     &:hover {
-        border-color: rgba(255, 255, 255, 0.1);
+        border-color: var(--card-hover-border);
     }
 }
 
@@ -209,7 +259,7 @@ body::before {
 
     &--amber {
         background: rgba(251, 191, 36, 0.12);
-        color: var(--accent-300);
+        color: var(--accent-400);
         border: 1px solid rgba(251, 191, 36, 0.2);
     }
 
@@ -351,7 +401,7 @@ body::before {
     }
 
     &:hover {
-        border-color: rgba(255, 255, 255, 0.12) !important;
+        border-color: var(--input-hover-border) !important;
     }
 }
 
@@ -359,7 +409,7 @@ body::before {
     background: var(--surface-card) !important;
     border: 1px solid var(--surface-border) !important;
     border-radius: var(--radius-md) !important;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5) !important;
+    box-shadow: 0 12px 40px var(--shadow-overlay) !important;
 
     .p-select-option {
         color: var(--text-primary) !important;
@@ -387,7 +437,7 @@ body::before {
     &:not(.p-button-outlined):not(.p-button-text):not(.p-button-danger) {
         background: linear-gradient(135deg, var(--accent-500), var(--accent-600)) !important;
         border-color: var(--accent-600) !important;
-        color: #0f1117 !important;
+        color: var(--btn-primary-text) !important;
 
         &:hover:not(:disabled) {
             background: linear-gradient(135deg, var(--accent-400), var(--accent-500)) !important;
@@ -406,7 +456,7 @@ body::before {
 
         &:hover {
             background: var(--surface-hover) !important;
-            border-color: rgba(255, 255, 255, 0.12) !important;
+            border-color: var(--input-hover-border) !important;
             color: var(--text-primary) !important;
         }
     }
@@ -440,7 +490,7 @@ body::before {
     background: var(--surface-card) !important;
     border: 1px solid var(--surface-border) !important;
     border-radius: var(--radius-md) !important;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5) !important;
+    box-shadow: 0 12px 40px var(--shadow-overlay) !important;
 }
 
 /* Toast */
@@ -452,8 +502,8 @@ body::before {
         background: var(--surface-card) !important;
         border: 1px solid var(--surface-border) !important;
         box-shadow:
-            0 8px 32px rgba(0, 0, 0, 0.45),
-            0 0 0 1px rgba(255, 255, 255, 0.04) !important;
+            0 8px 32px var(--shadow-toast),
+            0 0 0 1px var(--toast-inner-ring) !important;
         color: var(--text-primary) !important;
 
         .p-toast-message-content {
@@ -577,7 +627,7 @@ body::before {
 }
 
 button.p-togglebutton.p-togglebutton-checked {
-    background: rgba(245, 158, 11, 0.15) !important;
+    background: var(--togglebutton-checked-bg) !important;
     border-color: var(--accent-500) !important;
     color: var(--accent-300) !important;
 }
@@ -596,5 +646,5 @@ button.p-togglebutton.p-togglebutton-checked span {
     font-family: var(--font-body) !important;
     font-size: 0.78rem !important;
     border-radius: var(--radius-sm) !important;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+    box-shadow: 0 8px 24px var(--shadow-tooltip) !important;
 }

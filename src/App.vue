@@ -127,7 +127,7 @@ const tabs = [
         }
 
         &--active {
-            color: #0f1117;
+            color: var(--btn-primary-text);
             background: var(--accent-400);
             box-shadow: 0 2px 8px rgba(251, 191, 36, 0.2);
 
@@ -136,7 +136,7 @@ const tabs = [
             }
 
             &:hover {
-                color: #0f1117;
+                color: var(--btn-primary-text);
                 background: var(--accent-300);
             }
         }
